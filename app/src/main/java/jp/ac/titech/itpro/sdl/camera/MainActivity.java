@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -18,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final static int REQ_PHOTO = 1234;
     private Bitmap photoImage = null;
-
+    static final int REQUEST_IMAGE_CAPTURE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,9 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
         Button photoButton = findViewById(R.id.photo_button);
         photoButton.setOnClickListener(v -> {
-            Intent intent = new Intent();
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             // TODO: You should setup appropriate parameters for the intent
-
             PackageManager manager = getPackageManager();
             @SuppressLint("QueryPermissionsNeeded")
             List<ResolveInfo> activities = manager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
         if (reqCode == REQ_PHOTO) {
             if (resCode == RESULT_OK) {
                 // TODO: You should implement the code that retrieve a bitmap image
+                Bundle extras = data.getExtras();
+                photoImage = (Bitmap) extras.get("data");
             }
         }
     }
